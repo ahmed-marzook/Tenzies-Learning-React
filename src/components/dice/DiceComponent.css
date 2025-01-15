@@ -1,0 +1,57 @@
+/* Dice Button Base Styles */
+/* Setting exact dimensions and removing default button styles for a custom look */
+.dice {
+  /* Fixed square dimensions */
+  width: 36px;
+  height: 36px;
+
+  /* Visual styling */
+  background-color: #ffffff;
+  box-shadow: 0px 2px 2px 0px #00000026; /* Subtle shadow for depth */
+  border-radius: 4px;
+
+  /* Center content using flexbox */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Text styling */
+  font-family: "Karla", "serif";
+  font-weight: 700;
+  font-size: 1.2rem;
+
+  /* Interactive states */
+  cursor: pointer;
+  user-select: none; /* Prevents text selection */
+
+  /* Reset default button styles */
+  border: none;
+  padding: 0;
+}
+
+/* Active state - when dice is selected */
+.dice.active {
+  background-color: #59e391; /* Green background */
+  cursor: default; /* Removes pointer cursor when active */
+}
+
+/* Click animation for inactive dice */
+.dice:active {
+  transform: scale(0.98); /* Slight shrink effect when clicked */
+}
+
+/* Prevents click animation when dice is already active */
+.dice.active:active {
+  transform: scale(1);
+}
+
+/* 
+1) Always reset default button styles (border: none, padding: 0) when creating custom buttons
+2) Use line-height or flexbox for vertical text centering
+3) Consider adding hover/focus states for better interactivity
+4) Include disabled states when needed
+5) Ensure sufficient contrast for accessibility
+6) Add transition effects for smooth state changes
+7) Use user-select: none to prevent text selection on interactive elements
+8) Consider adding outline: none with a custom focus style for keyboard navigation 
+ */
