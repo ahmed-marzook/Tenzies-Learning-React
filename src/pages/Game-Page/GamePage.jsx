@@ -14,6 +14,15 @@ function GamePage() {
     );
   }
 
+  function freezeDice(id) {
+    setDice((prev) =>
+      prev.map((die) => ({
+        ...die,
+        active: id === die.id ? !die.active : die.active,
+      }))
+    );
+  }
+
   return (
     <div className="game-content">
       <section className="introduction">
@@ -27,8 +36,10 @@ function GamePage() {
         {dice.map((dice) => (
           <DiceComponent
             key={dice.id}
+            id={dice.id}
             isActive={dice.active}
             diceNumber={dice.number}
+            onHandle={freezeDice}
           />
         ))}
       </section>
