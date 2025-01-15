@@ -3,10 +3,15 @@ import "./GamePage.css";
 import diceArray from "../../data/dice";
 import { useState } from "react";
 function GamePage() {
-  const [dice, setDice] = useState(generateAllNewDice());
+  const [dice, setDice] = useState(diceArray);
 
   function generateAllNewDice() {
-    return Array.from({ length: 10 }, () => Math.floor(Math.random() * 6) + 1);
+    setDice((prev) =>
+      prev.map((die) => ({
+        ...die,
+        number: !die.active ? Math.floor(Math.random() * 6) + 1 : die.number,
+      }))
+    );
   }
 
   return (
@@ -19,7 +24,7 @@ function GamePage() {
         </p>
       </section>
       <section className="dice-grid">
-        {diceArray.map((dice) => (
+        {dice.map((dice) => (
           <DiceComponent
             key={dice.id}
             isActive={dice.active}
@@ -27,7 +32,9 @@ function GamePage() {
           />
         ))}
       </section>
-      <button className="game-button">Roll</button>
+      <button onClick={generateAllNewDice} className="game-button">
+        Roll
+      </button>
     </div>
   );
 }
