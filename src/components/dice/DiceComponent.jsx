@@ -3,10 +3,7 @@ import "./DiceComponent.css";
 function DiceComponent(props) {
   const className = `dice ${props.isActive ? "active" : ""}`;
   return (
-    <button
-      className={className}
-      onClick={!props.isActive ? () => props.onHandle(props.id) : undefined}
-    >
+    <button className={className} onClick={() => props.onHandle(props.id)}>
       {props.diceNumber}
     </button>
   );

@@ -14,7 +14,7 @@ function GamePage() {
     );
   }
 
-  function freezeDice(id) {
+  function changeDiceActiveStatus(id) {
     setDice((prev) =>
       prev.map((die) => ({
         ...die,
@@ -39,7 +39,7 @@ function GamePage() {
             id={dice.id}
             isActive={dice.active}
             diceNumber={dice.number}
-            onHandle={freezeDice}
+            onHandle={changeDiceActiveStatus}
           />
         ))}
       </section>
