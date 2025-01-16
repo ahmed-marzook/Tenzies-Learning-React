@@ -2,7 +2,7 @@
   "name": "tenzies-learning-react",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://ahmed-marzook.github.io/Tenzies-Learning-React",
+  "homepage": "https://tenzies.kaizenflow.dev",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
