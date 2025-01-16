@@ -88,15 +88,29 @@ This method deploys your app to your custom domain (e.g., `https://app.yourdomai
 ### 2. Configure Vite for Custom Domain
 
 ```javascript
+// vite.config.js
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import ghPages from "vite-plugin-gh-pages";
+import { ghPages } from "vite-plugin-gh-pages";
+import fs from "node:fs";
+import path from "node:path";
 
 export default defineConfig({
-  plugins: [react(), ghPages()],
+  plugins: [
+    react(),
+    ghPages({
+      // Add hook to persist CNAME file during deployment
+      onBeforePublish: ({ outDir }) => {
+        const CNAME = path.join(outDir, "CNAME");
+        fs.writeFileSync(CNAME, "<subdomain>.<your-domain>"); // Replace with your domain
+      },
+    }),
+  ],
   base: "/", // Base URL for custom domain
 });
 ```
+
+This configuration ensures your custom domain persists after each deployment by automatically creating a CNAME file during the build process.
 
 ### 3. Domain Setup
 
@@ -111,12 +125,10 @@ export default defineConfig({
    - Enter your domain and follow prompts
 
 2. Add DNS TXT Record:
-
    - Type: TXT
    - Host/Name: @ or as specified by GitHub
    - Value: [GitHub-provided verification string]
    - Verify using:
-
      ```shell
      dig <your-TXT-record> +nostats +nocomments +nocmd TXT
      ```
