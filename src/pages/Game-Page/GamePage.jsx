@@ -1,9 +1,10 @@
 import DiceComponent from "../../components/dice/DiceComponent";
 import "./GamePage.css";
 import diceArray from "../../data/dice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 function GamePage() {
   const [dice, setDice] = useState(diceArray);
+  const [hasWon, setHasWon] = useState(false);
 
   function generateAllNewDice() {
     setDice((prev) =>
@@ -23,6 +24,19 @@ function GamePage() {
     );
   }
 
+  useEffect(() => {
+    const firstNumber = dice[0].number;
+    const allActiveAndSame = dice.every(
+      (die) => die.active && die.number === firstNumber
+    );
+
+    if (allActiveAndSame) {
+      setHasWon(true);
+    } else {
+      setHasWon(false);
+    }
+  }, [dice]);
+
   return (
     <div className="game-content">
       <section className="introduction">
@@ -36,6 +50,7 @@ function GamePage() {
         {dice.map((dice) => (
           <DiceComponent
             key={dice.id}
+            hasWon={hasWon}
             id={dice.id}
             isActive={dice.active}
             diceNumber={dice.number}
@@ -44,7 +59,7 @@ function GamePage() {
         ))}
       </section>
       <button onClick={generateAllNewDice} className="game-button">
-        Roll
+        {hasWon ? "New Game" : "Roll"}
       </button>
     </div>
   );

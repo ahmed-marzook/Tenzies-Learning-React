@@ -32,17 +32,11 @@
 /* Active state - when dice is selected */
 .dice.active {
   background-color: #59e391; /* Green background */
-  cursor: default; /* Removes pointer cursor when active */
 }
 
 /* Click animation for inactive dice */
 .dice:active {
   transform: scale(0.98); /* Slight shrink effect when clicked */
-}
-
-/* Prevents click animation when dice is already active */
-.dice.active:active {
-  transform: scale(1);
 }
 
 /* 

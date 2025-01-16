@@ -3,7 +3,11 @@ import "./DiceComponent.css";
 function DiceComponent(props) {
   const className = `dice ${props.isActive ? "active" : ""}`;
   return (
-    <button className={className} onClick={() => props.onHandle(props.id)}>
+    <button
+      disabled={props.hasWon}
+      className={className}
+      onClick={() => props.onHandle(props.id)}
+    >
       {props.diceNumber}
     </button>
   );
@@ -14,6 +18,7 @@ DiceComponent.propTypes = {
   diceNumber: PropTypes.number.isRequired,
   isActive: PropTypes.bool.isRequired,
   onHandle: PropTypes.func.isRequired,
+  hasWon: PropTypes.bool.isRequired,
 };
 
 export default DiceComponent;
