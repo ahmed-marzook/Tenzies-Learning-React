@@ -1,12 +1,13 @@
 import DiceComponent from "../../components/dice/DiceComponent";
 import "./GamePage.css";
 import { useEffect, useState } from "react";
+import { nanoid } from "nanoid/non-secure";
 
 function createInitialDice() {
   return Array(10)
     .fill()
-    .map((_, index) => ({
-      id: index,
+    .map(() => ({
+      id: nanoid(),
       number: Math.floor(Math.random() * 6) + 1,
       active: false,
     }));
@@ -20,8 +21,8 @@ function GamePage() {
     if (hasWon) {
       return Array(10)
         .fill()
-        .map((_, index) => ({
-          id: index,
+        .map(() => ({
+          id: nanoid(),
           number: Math.floor(Math.random() * 6) + 1,
           active: false,
         }));
