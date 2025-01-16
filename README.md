@@ -2,12 +2,9 @@
 
 Learning React and created a basic Tenzies game access [here](https://ahmed-marzook.github.io/Tenzies-Learning-React/)
 
-## Deployment
+# Deployment Guide
 
-# Deploying Your Vite App to GitHub Pages
-
-Welcome! This guide will help you deploy your Vite application to GitHub Pages in just a few simple steps. GitHub Pages is a great free hosting solution that makes your app available at `https://<username>.github.io/<repository-name>`.
-Deployed to GitHub Pages using [vite-plugin-gh-pages](https://github.com/metonym/vite-plugin-gh-pages)
+This guide provides instructions for deploying your Vite application to GitHub Pages, both with and without a custom domain.
 
 ## Prerequisites
 
@@ -15,19 +12,35 @@ Deployed to GitHub Pages using [vite-plugin-gh-pages](https://github.com/metonym
 - Node.js and npm installed
 - A GitHub repository for your project
 
-## Setup Instructions
+## Base Setup (Required for Both Methods)
 
 ### 1. Install Required Package
-
-First, let's add the GitHub Pages deployment plugin to your project:
 
 ```bash
 npm install --save-dev vite-plugin-gh-pages
 ```
 
-### 2. Configure Vite
+### 2. Add Deployment Scripts
 
-Update your `vite.config.js` to use the plugin. This tells Vite how to build your project for GitHub Pages:
+Add these scripts to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "vite-gh-pages"
+  }
+}
+```
+
+## Method 1: Standard GitHub Pages Deployment
+
+This method deploys your app to `https://<username>.github.io/<repository-name>`.
+
+### 1. Configure Vite for Standard Deployment
+
+Update your `vite.config.js`:
 
 ```javascript
 import { defineConfig } from "vite";
@@ -40,34 +53,136 @@ export default defineConfig({
 });
 ```
 
-### 3. Add Deployment Scripts
-
-Add these scripts to your `package.json` to make deployment easy:
-
-```json
-{
-  "scripts": {
-    "build": "vite build",
-    "predeploy": "npm run build",
-    "deploy": "vite-gh-pages"
-  }
-}
-```
-
-### 4. Deploy! 🚀
-
-When you're ready to share your app with the world, just run:
+### 2. Deploy
 
 ```bash
 npm run deploy
 ```
 
-That's it! Your app will be built and deployed to the `gh-pages` branch of your repository. After a few minutes, you can visit `https://<username>.github.io/<repository-name>` to see your live app!
+Your app will be available at `https://<username>.github.io/<repository-name>`
 
-## Troubleshooting Tips
+## Method 2: Custom Domain Deployment
 
-- Make sure your repository name is exactly the same in the `base` config as it appears in GitHub
-- If your site isn't appearing, check that GitHub Pages is enabled in your repository settings
-- Allow a few minutes for your changes to appear after deploying
+This method deploys your app to your custom domain (e.g., `https://app.yourdomain.com`).
 
-Need help? Feel free to open an issue in the repository!
+### 1. Configure Package.json for Custom Domain
+
+```json
+{
+  "name": "tenzies-learning-react",
+  "private": true,
+  "version": "0.0.0",
+  "homepage": "https://<subdomain>.<your-domain>/",
+  "type": "module",
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "vite-gh-pages",
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  }
+}
+```
+
+### 2. Configure Vite for Custom Domain
+
+```javascript
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import ghPages from "vite-plugin-gh-pages";
+
+export default defineConfig({
+  plugins: [react(), ghPages()],
+  base: "/", // Base URL for custom domain
+});
+```
+
+### 3. Domain Setup
+
+#### A. Domain Verification
+
+1. In GitHub Organization Settings:
+
+   - Go to your profile photo > "Your organizations"
+   - Click "Settings" next to your organization
+   - Navigate to "Security" > "Verified and approved domains"
+   - Click "Add a domain"
+   - Enter your domain and follow prompts
+
+2. Add DNS TXT Record:
+
+   - Type: TXT
+   - Host/Name: @ or as specified by GitHub
+   - Value: [GitHub-provided verification string]
+   - Verify using:
+
+     ```shell
+     dig <your-TXT-record> +nostats +nocomments +nocmd TXT
+     ```
+
+#### B. DNS Configuration
+
+Add CNAME record in your domain provider:
+
+- Type: CNAME
+- Name: <your-subdomain>
+- Value: <your-github-username>.github.io
+- TTL: 1/2 Hour
+
+#### C. GitHub Pages Setup
+
+1. Go to repository Settings > Pages
+2. Enter your custom domain
+3. Wait for DNS verification
+4. Enable "Enforce HTTPS"
+
+### 4. Content Security Policy
+
+Add to your `index.html`:
+
+```html
+<meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self'; 
+               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+               font-src 'self' https://fonts.gstatic.com;
+               img-src 'self' data: https:;
+               script-src 'self' 'unsafe-inline' 'unsafe-eval';"
+/>
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **404 Errors**
+
+   - Check relative asset paths
+   - Verify base URL in vite.config.js
+   - Check build output files
+
+2. **DNS Issues**
+
+   - Allow up to 24 hours for DNS propagation
+   - Verify CNAME records
+   - Use GitHub's DNS check feature
+
+3. **Asset Loading**
+   - Use relative file paths
+   - Check Content Security Policy
+   - Verify build output structure
+
+## Maintenance
+
+To update the deployed site:
+
+1. Make changes to your code
+2. Commit and push to main branch
+3. Run `npm run deploy`
+
+## References
+
+- [vite-plugin-gh-pages Documentation](https://github.com/metonym/vite-plugin-gh-pages)
+- [GitHub Pages Documentation](https://docs.github.com/en/pages)
+- [Vite Documentation](https://vitejs.dev/)
