@@ -7,12 +7,22 @@ function GamePage() {
   const [hasWon, setHasWon] = useState(false);
 
   function generateAllNewDice() {
-    setDice((prev) =>
-      prev.map((die) => ({
-        ...die,
-        number: !die.active ? Math.floor(Math.random() * 6) + 1 : die.number,
-      }))
-    );
+    if (hasWon) {
+      setDice(
+        diceArray.map((die) => ({
+          ...die,
+          number: Math.floor(Math.random() * 6) + 1,
+          active: false,
+        }))
+      );
+    } else {
+      setDice((prev) =>
+        prev.map((die) => ({
+          ...die,
+          number: !die.active ? Math.floor(Math.random() * 6) + 1 : die.number,
+        }))
+      );
+    }
   }
 
   function changeDiceActiveStatus(id) {
