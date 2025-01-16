@@ -1,7 +1,7 @@
 // Import necessary components and libraries
 import DiceComponent from "../../components/dice/DiceComponent";
 import "./GamePage.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { nanoid } from "nanoid/non-secure"; // For generating unique IDs
 import Confetti from "react-confetti"; // For celebration animation
 import GameControls from "../../components/gamer-controls/GameControls";
@@ -14,8 +14,9 @@ function GamePage() {
   // The arrow function passed to useState is only executed once during initial render
   // This prevents generateNewDice from running on every render
   const [dice, setDice] = useState(() => generateNewDice());
-
   const [count, setCount] = useState(0);
+  const [time, setTime] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   // Check if all dice are active and show the same number
   // This determines if the player has won
@@ -55,9 +56,13 @@ function GamePage() {
     if (isNewGame) {
       setCount(0);
       setDice(generateNewDice());
+      resetTimer();
     } else {
       setDice(generateNewDice());
       setCount((prev) => prev + 1);
+    }
+    if (!isTimerRunning) {
+      startTimer();
     }
   }
 
@@ -69,7 +74,37 @@ function GamePage() {
         active: id === die.id ? !die.active : die.active,
       }))
     );
+    if (!isTimerRunning) {
+      startTimer();
+    }
   }
+
+  useEffect(() => {
+    let intervalId;
+    if (isTimerRunning && !isNewGame) {
+      intervalId = setInterval(() => {
+        setTime((prevTime) => {
+          // Stop at 9:59:99 to prevent display issues
+          if (prevTime >= 600000) {
+            // 10 minutes in milliseconds
+            setIsTimerRunning(false);
+            return prevTime;
+          }
+          return prevTime + 10;
+        });
+      }, 10);
+    }
+    return () => clearInterval(intervalId);
+  }, [isTimerRunning, isNewGame]);
+
+  const startTimer = () => {
+    setIsTimerRunning(true);
+  };
+
+  const resetTimer = () => {
+    setIsTimerRunning(false);
+    setTime(0);
+  };
 
   // Render game interface
   return (
@@ -95,7 +130,12 @@ function GamePage() {
             />
           ))}
         </div>
-        <GameControls rollDice={rollDice} count={count} isNewGame={isNewGame} />
+        <GameControls
+          rollDice={rollDice}
+          count={count}
+          isNewGame={isNewGame}
+          gameTime={time}
+        />
       </article>
     </main>
   );
