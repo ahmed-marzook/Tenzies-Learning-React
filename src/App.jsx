@@ -6,9 +6,7 @@ function App() {
   return (
     <>
       <img src={tenziesLogo}></img>
-      <main>
-        <GamePage />
-      </main>
+      <GamePage />
     </>
   );
 }

@@ -7,7 +7,7 @@ import Confetti from "react-confetti"; // For celebration animation
 
 function GamePage() {
   // Track if player has won or needs to start new game
-  let newGame = true;
+  let isNewGame = true;
 
   // Lazy initialization of dice state using useState
   // The arrow function passed to useState is only executed once during initial render
@@ -24,14 +24,14 @@ function GamePage() {
 
   // Update game state based on dice status
   if (allActiveAndSame) {
-    newGame = true;
+    isNewGame = true;
   } else {
-    newGame = false;
+    isNewGame = false;
   }
 
   // Function to generate new dice array
   function generateNewDice() {
-    if (newGame) {
+    if (isNewGame) {
       // Create completely new set of 10 dice for new game
       return Array(10)
         .fill()
@@ -51,7 +51,7 @@ function GamePage() {
 
   // Handler for roll dice button
   function rollDice() {
-    if (newGame) {
+    if (isNewGame) {
       setCount(0);
       setDice(generateNewDice());
     } else {
@@ -72,42 +72,52 @@ function GamePage() {
 
   // Render game interface
   return (
-    <div className="game-content">
-      {newGame && <Confetti />} {/* Show celebration animation on win */}
-      <section className="introduction">
-        <h2 className="header">How to play?</h2>
-        <p>
+    <main className="game-content">
+      {isNewGame && <Confetti />}
+
+      <header className="introduction">
+        <h1 className="game-title">How to play?</h1>
+        <p className="game-instructions">
           Roll until all dice are the same. Click each die to freeze it at its
           current value between rolls.
         </p>
-      </section>
-      <section className="dice-grid">
-        {/* Render array of dice components */}
-        {dice.map((dice) => (
-          <DiceComponent
-            key={dice.id}
-            hasWon={newGame}
-            id={dice.id}
-            isActive={dice.active}
-            diceNumber={dice.number}
-            onHandle={changeDiceActiveStatus}
-          />
-        ))}
-      </section>
-      <section className="user-section">
-        <div className="count-section">
-          Count
-          <p>{count}</p>
+      </header>
+
+      <article className="game-board">
+        <div className="dice-grid" role="grid" aria-label="Dice grid">
+          {dice.map((die) => (
+            <DiceComponent
+              key={die.id}
+              hasWon={isNewGame}
+              id={die.id}
+              isActive={die.active}
+              diceNumber={die.number}
+              onHandle={changeDiceActiveStatus}
+            />
+          ))}
         </div>
-        <button onClick={rollDice} className="game-button">
-          {newGame ? "New Game" : "Roll"}
-        </button>
-        <div className="game-timer-section">
-          Timer
-          <p>00:00</p>
-        </div>
-      </section>
-    </div>
+
+        <footer className="game-controls">
+          <div className="game-stat">
+            <span className="stat-label">Count</span>
+            <span className="stat-value">{count}</span>
+          </div>
+
+          <button
+            onClick={rollDice}
+            className="game-button"
+            aria-label={isNewGame ? "Start new game" : "Roll dice"}
+          >
+            {isNewGame ? "New Game" : "Roll"}
+          </button>
+
+          <div className="game-stat">
+            <span className="stat-label">Timer</span>
+            <span className="stat-value">00:00</span>
+          </div>
+        </footer>
+      </article>
+    </main>
   );
 }
 
