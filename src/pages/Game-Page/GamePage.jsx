@@ -4,7 +4,7 @@ import "./GamePage.css";
 import { useEffect, useState } from "react";
 import { nanoid } from "nanoid/non-secure"; // For generating unique IDs
 import Confetti from "react-confetti"; // For celebration animation
-import GameControls from "../../components/gamer-controls/GameControls";
+import GameControls from "../../components/gameControls/GameControls";
 
 function GamePage() {
   // Track if player has won or needs to start new game
