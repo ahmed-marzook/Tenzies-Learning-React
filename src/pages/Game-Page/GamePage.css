@@ -1,56 +1,36 @@
+/* Variables for consistent values */
+:root {
+  --color-primary: #5035ff;
+  --color-text-primary: #2b283a;
+  --color-text-secondary: #4a4e74;
+  --color-white: #fff;
+
+  --font-primary: "Karla", "serif";
+  --font-secondary: "Inter", "serif";
+
+  --spacing-small: 5px;
+  --spacing-medium: 20px;
+  --spacing-large: 31px;
+  --spacing-xlarge: 34px;
+
+  --shadow-button: 0px 3.2px 7.68px 0px #0000002e;
+}
+
+/* Layout */
 .game-content {
-  margin: 34px;
+  margin: var(--spacing-xlarge);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.introduction {
-  text-align: center;
-}
-
-.introduction > p {
-  font-family: "Inter", "serif";
-  font-weight: 400;
-  font-size: 13px;
-  margin: 0;
-  color: #4a4e74;
-}
-
-.introduction > h2 {
-  font-family: "Karla", "serif";
-  font-weight: 700;
-  margin: 0;
-  font-size: 26px;
-  color: #2b283a;
-}
-
 .dice-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 20px;
-  margin-top: 31px;
-}
-
-.game-button {
-  padding: 0px;
-  border: none;
-  height: 36px;
-  width: 92px;
-  line-height: 35px;
-  border-radius: 4px;
-  background-color: #5035ff;
-  color: white;
-  font-family: "Karla", "serif";
-  font-weight: 700;
-  box-shadow: 0px 3.2px 7.68px 0px #0000002e;
-  cursor: pointer;
-}
-
-.game-button:active {
-  transform: scale(0.98);
+  gap: var(--spacing-medium);
+  margin-top: var(--spacing-large);
 }
 
 .user-section {
@@ -58,16 +38,59 @@
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
   align-items: center;
-  gap: 5px;
-  margin-top: 31px;
+  gap: var(--spacing-small);
+  margin-top: var(--spacing-large);
   text-align: center;
 }
 
+/* Typography */
+.introduction {
+  text-align: center;
+}
+
+.introduction h2 {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  margin: 0;
+  font-size: 26px;
+  color: var(--color-text-primary);
+}
+
+.introduction p {
+  font-family: var(--font-secondary);
+  font-weight: 400;
+  font-size: 13px;
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+/* Components */
+.game-button {
+  padding: 0;
+  border: none;
+  height: 36px;
+  width: 92px;
+  line-height: 35px;
+  border-radius: 4px;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  font-family: var(--font-primary);
+  font-weight: 700;
+  box-shadow: var(--shadow-button);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.game-button:active {
+  transform: scale(0.98);
+}
+
+/* User Section Elements */
 .user-section div {
-  font-family: "Karla", "serif";
+  font-family: var(--font-primary);
   font-weight: 700;
 }
 
 .user-section p {
-  margin: 0px;
+  margin: 0;
 }
