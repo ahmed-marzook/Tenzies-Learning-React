@@ -14,6 +14,8 @@ function GamePage() {
   // This prevents generateNewDice from running on every render
   const [dice, setDice] = useState(() => generateNewDice());
 
+  const [count, setCount] = useState(0);
+
   // Check if all dice are active and show the same number
   // This determines if the player has won
   const allActiveAndSame = dice.every(
@@ -49,7 +51,13 @@ function GamePage() {
 
   // Handler for roll dice button
   function rollDice() {
-    setDice(generateNewDice());
+    if (newGame) {
+      setCount(0);
+      setDice(generateNewDice());
+    } else {
+      setDice(generateNewDice());
+      setCount((prev) => prev + 1);
+    }
   }
 
   // Handler for clicking individual dice to freeze/unfreeze them
@@ -86,9 +94,19 @@ function GamePage() {
           />
         ))}
       </section>
-      <button onClick={rollDice} className="game-button">
-        {newGame ? "New Game" : "Roll"}
-      </button>
+      <section className="user-section">
+        <div className="count-section">
+          Count
+          <p>{count}</p>
+        </div>
+        <button onClick={rollDice} className="game-button">
+          {newGame ? "New Game" : "Roll"}
+        </button>
+        <div className="game-timer-section">
+          Timer
+          <p>00:00</p>
+        </div>
+      </section>
     </div>
   );
 }

@@ -40,7 +40,6 @@
   height: 36px;
   width: 92px;
   line-height: 35px;
-  margin-top: 31px;
   border-radius: 4px;
   background-color: #5035ff;
   color: white;
@@ -52,4 +51,23 @@
 
 .game-button:active {
   transform: scale(0.98);
+}
+
+.user-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  align-items: center;
+  gap: 5px;
+  margin-top: 31px;
+  text-align: center;
+}
+
+.user-section div {
+  font-family: "Karla", "serif";
+  font-weight: 700;
+}
+
+.user-section p {
+  margin: 0px;
 }
