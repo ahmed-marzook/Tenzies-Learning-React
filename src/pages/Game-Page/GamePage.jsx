@@ -1,28 +1,40 @@
 import DiceComponent from "../../components/dice/DiceComponent";
 import "./GamePage.css";
-import diceArray from "../../data/dice";
 import { useEffect, useState } from "react";
-function GamePage() {
-  const [dice, setDice] = useState(diceArray);
-  const [hasWon, setHasWon] = useState(false);
 
-  function generateAllNewDice() {
+function createInitialDice() {
+  return Array(10)
+    .fill()
+    .map((_, index) => ({
+      id: index,
+      number: Math.floor(Math.random() * 6) + 1,
+      active: false,
+    }));
+}
+
+function GamePage() {
+  const [hasWon, setHasWon] = useState(false);
+  const [dice, setDice] = useState(createInitialDice());
+
+  function generateNewDice() {
     if (hasWon) {
-      setDice(
-        diceArray.map((die) => ({
-          ...die,
+      return Array(10)
+        .fill()
+        .map((_, index) => ({
+          id: index,
           number: Math.floor(Math.random() * 6) + 1,
           active: false,
-        }))
-      );
+        }));
     } else {
-      setDice((prev) =>
-        prev.map((die) => ({
-          ...die,
-          number: !die.active ? Math.floor(Math.random() * 6) + 1 : die.number,
-        }))
-      );
+      return dice.map((die) => ({
+        ...die,
+        number: !die.active ? Math.floor(Math.random() * 6) + 1 : die.number,
+      }));
     }
+  }
+
+  function rollDice() {
+    setDice(generateNewDice());
   }
 
   function changeDiceActiveStatus(id) {
@@ -68,7 +80,7 @@ function GamePage() {
           />
         ))}
       </section>
-      <button onClick={generateAllNewDice} className="game-button">
+      <button onClick={rollDice} className="game-button">
         {hasWon ? "New Game" : "Roll"}
       </button>
     </div>
