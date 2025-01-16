@@ -2,6 +2,7 @@ import DiceComponent from "../../components/dice/DiceComponent";
 import "./GamePage.css";
 import { useState } from "react";
 import { nanoid } from "nanoid/non-secure";
+import Confetti from "react-confetti";
 
 function GamePage() {
   let newGame = true;
@@ -49,6 +50,7 @@ function GamePage() {
 
   return (
     <div className="game-content">
+      {newGame && <Confetti />}
       <section className="introduction">
         <h2 className="header">How to play?</h2>
         <p>

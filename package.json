@@ -12,6 +12,7 @@
   "dependencies": {
     "nanoid": "^5.0.9",
     "react": "^19.0.0",
+    "react-confetti": "^6.2.2",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
