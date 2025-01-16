@@ -1,24 +1,24 @@
 import DiceComponent from "../../components/dice/DiceComponent";
 import "./GamePage.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { nanoid } from "nanoid/non-secure";
 
-function createInitialDice() {
-  return Array(10)
-    .fill()
-    .map(() => ({
-      id: nanoid(),
-      number: Math.floor(Math.random() * 6) + 1,
-      active: false,
-    }));
-}
-
 function GamePage() {
-  const [hasWon, setHasWon] = useState(false);
-  const [dice, setDice] = useState(createInitialDice());
+  let newGame = true;
+  const [dice, setDice] = useState(generateNewDice());
+
+  const allActiveAndSame = dice.every(
+    (die) => die.active && die.number === dice[0].number
+  );
+
+  if (allActiveAndSame) {
+    newGame = true;
+  } else {
+    newGame = false;
+  }
 
   function generateNewDice() {
-    if (hasWon) {
+    if (newGame) {
       return Array(10)
         .fill()
         .map(() => ({
@@ -47,19 +47,6 @@ function GamePage() {
     );
   }
 
-  useEffect(() => {
-    const firstNumber = dice[0].number;
-    const allActiveAndSame = dice.every(
-      (die) => die.active && die.number === firstNumber
-    );
-
-    if (allActiveAndSame) {
-      setHasWon(true);
-    } else {
-      setHasWon(false);
-    }
-  }, [dice]);
-
   return (
     <div className="game-content">
       <section className="introduction">
@@ -73,7 +60,7 @@ function GamePage() {
         {dice.map((dice) => (
           <DiceComponent
             key={dice.id}
-            hasWon={hasWon}
+            hasWon={newGame}
             id={dice.id}
             isActive={dice.active}
             diceNumber={dice.number}
@@ -82,7 +69,7 @@ function GamePage() {
         ))}
       </section>
       <button onClick={rollDice} className="game-button">
-        {hasWon ? "New Game" : "Roll"}
+        {newGame ? "New Game" : "Roll"}
       </button>
     </div>
   );
