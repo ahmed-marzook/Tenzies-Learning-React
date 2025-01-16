@@ -1,0 +1,49 @@
+/* Controls */
+.game-controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  align-items: center;
+  gap: var(--spacing-small);
+  margin-top: var(--spacing-large);
+  text-align: center;
+  width: 100%;
+}
+
+.game-button {
+  padding: 0;
+  border: none;
+  height: 36px;
+  width: 92px;
+  line-height: 35px;
+  border-radius: 4px;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  font-family: var(--font-primary);
+  font-weight: 700;
+  box-shadow: var(--shadow-button);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.game-button:active {
+  transform: scale(0.98);
+}
+
+/* Game Stats */
+.game-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  margin: 0;
+  font-family: var(--font-primary);
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+
+.stat-label {
+  font-family: var(--font-secondary);
+  font-weight: 700;
+}

@@ -4,6 +4,7 @@ import "./GamePage.css";
 import { useState } from "react";
 import { nanoid } from "nanoid/non-secure"; // For generating unique IDs
 import Confetti from "react-confetti"; // For celebration animation
+import GameControls from "../../components/timer/GameControls";
 
 function GamePage() {
   // Track if player has won or needs to start new game
@@ -74,7 +75,6 @@ function GamePage() {
   return (
     <main className="game-content">
       {isNewGame && <Confetti />}
-
       <header className="introduction">
         <h1 className="game-title">How to play?</h1>
         <p className="game-instructions">
@@ -82,7 +82,6 @@ function GamePage() {
           current value between rolls.
         </p>
       </header>
-
       <article className="game-board">
         <div className="dice-grid" role="grid" aria-label="Dice grid">
           {dice.map((die) => (
@@ -96,26 +95,7 @@ function GamePage() {
             />
           ))}
         </div>
-
-        <footer className="game-controls">
-          <div className="game-stat">
-            <span className="stat-label">Count</span>
-            <span className="stat-value">{count}</span>
-          </div>
-
-          <button
-            onClick={rollDice}
-            className="game-button"
-            aria-label={isNewGame ? "Start new game" : "Roll dice"}
-          >
-            {isNewGame ? "New Game" : "Roll"}
-          </button>
-
-          <div className="game-stat">
-            <span className="stat-label">Timer</span>
-            <span className="stat-value">00:00</span>
-          </div>
-        </footer>
+        <GameControls rollDice={rollDice} count={count} isNewGame={isNewGame} />
       </article>
     </main>
   );
