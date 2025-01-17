@@ -21,6 +21,9 @@ function DiceComponent({ id, diceNumber, isActive, onHandle, hasWon }) {
       // It's often clearer to pass the callback inline to highlight the param usage
       onClick={() => onHandle(id)}
       aria-pressed={isActive} // good for accessibility to indicate toggled state
+      aria-label={`Die with a value ${diceNumber}, ${
+        isActive ? "Active" : "Not Active"
+      }`}
     >
       {diceNumber}
     </button>

@@ -150,6 +150,13 @@ function GamePage() {
   return (
     <main className="game-content">
       {isNewGame && <Confetti />}
+      <div aria-live="polite" className="sr-only">
+        {isNewGame && (
+          <p>
+            Congratulations! You won! Press &quot;New Game&quot; to start again.
+          </p>
+        )}
+      </div>
       {isPopUpVisible && (
         <ResultPopUp
           score={calculateScore()}
