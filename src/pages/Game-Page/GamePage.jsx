@@ -6,6 +6,8 @@ import { nanoid } from "nanoid/non-secure"; // For generating unique IDs
 import Confetti from "react-confetti"; // For celebration animation
 import GameControls from "../../components/gameControls/GameControls";
 import ResultPopUp from "../../components/resultPopUp/ResultPopUp";
+import calculateScore from "../../utility/calculateScore";
+import formatTime from "../../utility/formatTime";
 
 function GamePage() {
   // Track if player has won or needs to start new game
@@ -111,37 +113,6 @@ function GamePage() {
     setTime(0);
   };
 
-  const formatTime = (ms) => {
-    const minutes = Math.floor(ms / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
-    const milliseconds = Math.floor((ms % 1000) / 10);
-
-    if (minutes > 9) {
-      return "9:59:99"; // Max display value
-    }
-
-    return `${minutes}:${seconds.toString().padStart(2, "0")}:${milliseconds
-      .toString()
-      .padStart(2, "0")}`;
-  };
-
-  function calculateScore() {
-    // Convert milliseconds to seconds
-    const timeSeconds = time / 1000;
-
-    // Use exponential scaling for better distribution
-    const normalizedTime = Math.exp(-timeSeconds / 30); // e^(-t/30) gives nice decay
-    const normalizedCount = Math.exp(-count / 30); // e^(-c/30) gives nice decay
-
-    // Scale to 1-1000 range
-    const score = Math.max(
-      1,
-      Math.min(1000, Math.round(normalizedTime * normalizedCount * 1000))
-    );
-
-    return score;
-  }
-
   function closePopUp() {
     setIsPopUpVisible(false);
   }
@@ -159,7 +130,7 @@ function GamePage() {
       </div>
       {isPopUpVisible && (
         <ResultPopUp
-          score={calculateScore()}
+          score={calculateScore(time, count)}
           time={formatTime(time)}
           count={count}
           onClose={closePopUp}
