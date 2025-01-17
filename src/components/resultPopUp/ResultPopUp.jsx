@@ -1,6 +1,9 @@
 import PropTypes from "prop-types";
 import "./ResultPopUp.css";
 import GameStat from "../gameStat/GameStat";
+import calculateScore from "../../utility/calculateScore";
+import formatTime from "../../utility/formatTime";
+
 function ResultPopUp(props) {
   return (
     <div className="modal-overlay" onClick={props.onClose}>
@@ -14,11 +17,14 @@ function ResultPopUp(props) {
 
           <div className="stats-grid">
             <div className="stat-box">
-              <GameStat label={"Time"} value={props.time} />
+              <GameStat label={"Time"} value={formatTime(props.time)} />
             </div>
 
             <div className="stat-box">
-              <GameStat label={"Score"} value={props.score} />
+              <GameStat
+                label={"Score"}
+                value={calculateScore(props.time, props.count)}
+              />
             </div>
 
             <div className="stat-box">

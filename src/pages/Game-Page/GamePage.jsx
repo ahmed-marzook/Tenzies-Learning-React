@@ -5,111 +5,44 @@ import { useEffect, useState } from "react";
 import Confetti from "react-confetti"; // For celebration animation
 import GameControls from "../../components/gameControls/GameControls";
 import ResultPopUp from "../../components/resultPopUp/ResultPopUp";
-import calculateScore from "../../utility/calculateScore";
 import formatTime from "../../utility/formatTime";
-import generateAllDice from "../../utility/generateAllDice";
+import useTimer from "../../hooks/useTimer";
+import useGameState from "../../hooks/useGameState";
 
 function GamePage() {
-  // Track if player has won or needs to start new game
-  let hasWon = true;
-
-  // Lazy initialization of dice state using useState
-  // The arrow function passed to useState is only executed once during initial render
-  // This prevents generateNewDice from running on every render
-  const [dice, setDice] = useState(() => generateAllDice());
-  const [count, setCount] = useState(0);
-  const [time, setTime] = useState(0);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const { dice, count, hasWon, rollDice, toggleDice } = useGameState();
+  const { time, isTimerRunning, startTimer, resetTimer, stopTimer } =
+    useTimer();
   const [isPopUpVisible, setIsPopUpVisible] = useState(false);
-
-  // Check if all dice are active and show the same number
-  // This determines if the player has won
-  const allActiveAndSame = dice.every(
-    (die) => die.active && die.number === dice[0].number
-  );
-
-  // Update game state based on dice status
-  if (allActiveAndSame) {
-    hasWon = true;
-  } else {
-    hasWon = false;
-  }
-
-  // Function to generate new dice array
-  function generateNewDice() {
-    if (hasWon) {
-      // Create completely new set of 10 dice for new game
-      return generateAllDice();
-    } else {
-      // Only update numbers for non-active (unfrozen) dice
-      return dice.map((die) => ({
-        ...die,
-        number: !die.active ? Math.floor(Math.random() * 6) + 1 : die.number,
-      }));
-    }
-  }
-
-  // Handler for roll dice button
-  function rollDice() {
-    if (hasWon) {
-      setCount(0);
-      setDice(generateNewDice());
-      resetTimer();
-    } else {
-      setDice(generateNewDice());
-      setCount((prev) => prev + 1);
-    }
-    if (!isTimerRunning) {
-      startTimer();
-    }
-  }
-
-  // Handler for clicking individual dice to freeze/unfreeze them
-  function changeDiceActiveStatus(id) {
-    setDice((prev) =>
-      prev.map((die) => ({
-        ...die,
-        active: id === die.id ? !die.active : die.active,
-      }))
-    );
-    if (!isTimerRunning) {
-      startTimer();
-    }
-  }
+  const [hasShownPopup, setHasShownPopup] = useState(false);
 
   useEffect(() => {
-    let intervalId;
-    if (isTimerRunning && !hasWon) {
-      intervalId = setInterval(() => {
-        setTime((prevTime) => {
-          // Stop at 9:59:99 to prevent display issues
-          if (prevTime >= 600000) {
-            // 10 minutes in milliseconds
-            setIsTimerRunning(false);
-            return prevTime;
-          }
-          return prevTime + 10;
-        });
-      }, 10);
-    }
-    if (hasWon) {
+    if (hasWon && !hasShownPopup) {
+      stopTimer();
       setIsPopUpVisible(true);
+      setHasShownPopup(true);
     }
-    return () => clearInterval(intervalId);
-  }, [isTimerRunning, hasWon]);
+  }, [hasWon, stopTimer, hasShownPopup]);
 
-  const startTimer = () => {
-    setIsTimerRunning(true);
+  const handleRollDice = () => {
+    const isNewGame = rollDice();
+    if (isNewGame) {
+      resetTimer();
+      stopTimer();
+      setHasShownPopup(false);
+      return;
+    }
+    if (!isTimerRunning) {
+      startTimer();
+    }
   };
 
-  const resetTimer = () => {
-    setIsTimerRunning(false);
-    setTime(0);
+  const handleDiceClick = (id) => {
+    toggleDice(id);
+    if (!isTimerRunning) {
+      startTimer();
+    }
   };
-
-  function closePopUp() {
-    setIsPopUpVisible(false);
-  }
 
   // Render game interface
   return (
@@ -124,10 +57,9 @@ function GamePage() {
       </div>
       {isPopUpVisible && (
         <ResultPopUp
-          score={calculateScore(time, count)}
-          time={formatTime(time)}
+          time={time}
           count={count}
-          onClose={closePopUp}
+          onClose={() => setIsPopUpVisible(false)}
         />
       )}
       <header className="introduction">
@@ -146,12 +78,12 @@ function GamePage() {
               id={die.id}
               isActive={die.active}
               diceNumber={die.number}
-              onHandle={changeDiceActiveStatus}
+              onClick={handleDiceClick}
             />
           ))}
         </div>
         <GameControls
-          rollDice={rollDice}
+          rollDice={handleRollDice}
           count={count}
           hasWon={hasWon}
           gameTime={formatTime(time)}
@@ -160,7 +92,5 @@ function GamePage() {
     </main>
   );
 }
-
-GamePage.propTypes = {};
 
 export default GamePage;

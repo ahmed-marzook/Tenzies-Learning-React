@@ -10,7 +10,7 @@ import "./DiceComponent.css";
  * @param {function} onHandle - Callback when the dice is clicked; receives the dice id.
  * @param {boolean} hasWon - Disables the dice interaction if true (game is already won).
  */
-function DiceComponent({ id, diceNumber, isActive, onHandle, hasWon }) {
+function DiceComponent({ id, diceNumber, isActive, onClick, hasWon }) {
   // We build a dynamic class to visually highlight the active dice
   const className = `dice ${isActive ? "active" : ""}`;
 
@@ -19,7 +19,7 @@ function DiceComponent({ id, diceNumber, isActive, onHandle, hasWon }) {
       disabled={hasWon}
       className={className}
       // It's often clearer to pass the callback inline to highlight the param usage
-      onClick={() => onHandle(id)}
+      onClick={() => onClick(id)}
       aria-pressed={isActive} // good for accessibility to indicate toggled state
       aria-label={`Die with a value ${diceNumber}, ${
         isActive ? "Active" : "Not Active"
@@ -37,6 +37,6 @@ DiceComponent.propTypes = {
   id: PropTypes.number.isRequired,
   diceNumber: PropTypes.number.isRequired,
   isActive: PropTypes.bool.isRequired,
-  onHandle: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
   hasWon: PropTypes.bool.isRequired,
 };
