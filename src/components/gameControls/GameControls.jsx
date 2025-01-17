@@ -1,14 +1,11 @@
 import PropTypes from "prop-types";
 import "./GameControls.css";
-import Timer from "../timer/Timer";
+import GameStat from "../gameStat/GameStat";
 
 function GameControls(props) {
   return (
     <footer className="game-controls">
-      <div className="game-stat">
-        <span className="stat-label">Count</span>
-        <span className="stat-value">{props.count}</span>
-      </div>
+      <GameStat label={"Count"} value={props.count} />
 
       <button
         onClick={props.rollDice}
@@ -17,7 +14,7 @@ function GameControls(props) {
       >
         {props.isNewGame ? "New Game" : "Roll"}
       </button>
-      <Timer gameTime={props.gameTime} />
+      <GameStat label={"Time"} value={props.gameTime} />
     </footer>
   );
 }

@@ -29,21 +29,3 @@
 .game-button:active {
   transform: scale(0.98);
 }
-
-/* Game Stats */
-.game-stat {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-value {
-  margin: 0;
-  font-family: var(--font-primary);
-  font-weight: 700;
-  color: var(--color-text-secondary);
-}
-
-.stat-label {
-  font-family: var(--font-secondary);
-  font-weight: 700;
-}
