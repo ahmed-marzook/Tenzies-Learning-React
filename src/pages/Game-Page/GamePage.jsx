@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { nanoid } from "nanoid/non-secure"; // For generating unique IDs
 import Confetti from "react-confetti"; // For celebration animation
 import GameControls from "../../components/gameControls/GameControls";
+import ResultPopUp from "../../components/resultPopUp/ResultPopUp";
 
 function GamePage() {
   // Track if player has won or needs to start new game
@@ -17,6 +18,7 @@ function GamePage() {
   const [count, setCount] = useState(0);
   const [time, setTime] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isPopUpVisible, setIsPopUpVisible] = useState(false);
 
   // Check if all dice are active and show the same number
   // This determines if the player has won
@@ -94,6 +96,9 @@ function GamePage() {
         });
       }, 10);
     }
+    if (isNewGame) {
+      setIsPopUpVisible(true);
+    }
     return () => clearInterval(intervalId);
   }, [isTimerRunning, isNewGame]);
 
@@ -104,6 +109,20 @@ function GamePage() {
   const resetTimer = () => {
     setIsTimerRunning(false);
     setTime(0);
+  };
+
+  const formatTime = (ms) => {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    const milliseconds = Math.floor((ms % 1000) / 10);
+
+    if (minutes > 9) {
+      return "9:59:99"; // Max display value
+    }
+
+    return `${minutes}:${seconds.toString().padStart(2, "0")}:${milliseconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   function calculateScore() {
@@ -123,10 +142,22 @@ function GamePage() {
     return score;
   }
 
+  function closePopUp() {
+    setIsPopUpVisible(false);
+  }
+
   // Render game interface
   return (
     <main className="game-content">
       {isNewGame && <Confetti />}
+      {isPopUpVisible && (
+        <ResultPopUp
+          score={calculateScore()}
+          time={formatTime(time)}
+          count={count}
+          onClose={closePopUp}
+        />
+      )}
       <header className="introduction">
         <h1 className="game-title">How to play?</h1>
         <p className="game-instructions">
@@ -151,7 +182,7 @@ function GamePage() {
           rollDice={rollDice}
           count={count}
           isNewGame={isNewGame}
-          gameTime={time}
+          gameTime={formatTime(time)}
         />
       </article>
     </main>
