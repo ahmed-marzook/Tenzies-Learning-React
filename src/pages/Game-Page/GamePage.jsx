@@ -2,21 +2,21 @@
 import DiceComponent from "../../components/dice/DiceComponent";
 import "./GamePage.css";
 import { useEffect, useState } from "react";
-import { nanoid } from "nanoid/non-secure"; // For generating unique IDs
 import Confetti from "react-confetti"; // For celebration animation
 import GameControls from "../../components/gameControls/GameControls";
 import ResultPopUp from "../../components/resultPopUp/ResultPopUp";
 import calculateScore from "../../utility/calculateScore";
 import formatTime from "../../utility/formatTime";
+import generateAllDice from "../../utility/generateAllDice";
 
 function GamePage() {
   // Track if player has won or needs to start new game
-  let isNewGame = true;
+  let hasWon = true;
 
   // Lazy initialization of dice state using useState
   // The arrow function passed to useState is only executed once during initial render
   // This prevents generateNewDice from running on every render
-  const [dice, setDice] = useState(() => generateNewDice());
+  const [dice, setDice] = useState(() => generateAllDice());
   const [count, setCount] = useState(0);
   const [time, setTime] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -30,22 +30,16 @@ function GamePage() {
 
   // Update game state based on dice status
   if (allActiveAndSame) {
-    isNewGame = true;
+    hasWon = true;
   } else {
-    isNewGame = false;
+    hasWon = false;
   }
 
   // Function to generate new dice array
   function generateNewDice() {
-    if (isNewGame) {
+    if (hasWon) {
       // Create completely new set of 10 dice for new game
-      return Array(10)
-        .fill()
-        .map(() => ({
-          id: nanoid(),
-          number: Math.floor(Math.random() * 6) + 1, // Random number 1-6
-          active: false,
-        }));
+      return generateAllDice();
     } else {
       // Only update numbers for non-active (unfrozen) dice
       return dice.map((die) => ({
@@ -57,7 +51,7 @@ function GamePage() {
 
   // Handler for roll dice button
   function rollDice() {
-    if (isNewGame) {
+    if (hasWon) {
       setCount(0);
       setDice(generateNewDice());
       resetTimer();
@@ -85,7 +79,7 @@ function GamePage() {
 
   useEffect(() => {
     let intervalId;
-    if (isTimerRunning && !isNewGame) {
+    if (isTimerRunning && !hasWon) {
       intervalId = setInterval(() => {
         setTime((prevTime) => {
           // Stop at 9:59:99 to prevent display issues
@@ -98,11 +92,11 @@ function GamePage() {
         });
       }, 10);
     }
-    if (isNewGame) {
+    if (hasWon) {
       setIsPopUpVisible(true);
     }
     return () => clearInterval(intervalId);
-  }, [isTimerRunning, isNewGame]);
+  }, [isTimerRunning, hasWon]);
 
   const startTimer = () => {
     setIsTimerRunning(true);
@@ -120,9 +114,9 @@ function GamePage() {
   // Render game interface
   return (
     <main className="game-content">
-      {isNewGame && <Confetti />}
+      {hasWon && <Confetti />}
       <div aria-live="polite" className="sr-only">
-        {isNewGame && (
+        {hasWon && (
           <p>
             Congratulations! You won! Press &quot;New Game&quot; to start again.
           </p>
@@ -148,7 +142,7 @@ function GamePage() {
           {dice.map((die) => (
             <DiceComponent
               key={die.id}
-              hasWon={isNewGame}
+              hasWon={hasWon}
               id={die.id}
               isActive={die.active}
               diceNumber={die.number}
@@ -159,7 +153,7 @@ function GamePage() {
         <GameControls
           rollDice={rollDice}
           count={count}
-          isNewGame={isNewGame}
+          hasWon={hasWon}
           gameTime={formatTime(time)}
         />
       </article>

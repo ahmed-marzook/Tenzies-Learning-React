@@ -10,9 +10,9 @@ function GameControls(props) {
       <button
         onClick={props.rollDice}
         className="game-button"
-        aria-label={props.isNewGame ? "Start new game" : "Roll dice"}
+        aria-label={props.hasWon ? "Start new game" : "Roll dice"}
       >
-        {props.isNewGame ? "New Game" : "Roll"}
+        {props.hasWon ? "New Game" : "Roll"}
       </button>
       <GameStat label={"Time"} value={props.gameTime} />
     </footer>
@@ -22,7 +22,7 @@ function GameControls(props) {
 GameControls.propTypes = {
   count: PropTypes.number.isRequired,
   rollDice: PropTypes.func.isRequired,
-  isNewGame: PropTypes.bool.isRequired,
+  hasWon: PropTypes.bool.isRequired,
   gameTime: PropTypes.number.isRequired,
 };
 
