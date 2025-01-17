@@ -5,8 +5,7 @@ export default function generateAllDice() {
         .fill()
         .map(() => ({
             id: nanoid(),
-            // number: Math.floor(Math.random() * 6) + 1, // Random number 1-6
-            number: 5,
+            number: Math.floor(Math.random() * 6) + 1, // Random number 1-6
             active: false,
         }));
 }
