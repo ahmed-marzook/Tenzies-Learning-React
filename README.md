@@ -138,8 +138,8 @@ This configuration ensures your custom domain persists after each deployment by 
 Add CNAME record in your domain provider:
 
 - Type: CNAME
-- Name: <your-subdomain>
-- Value: <your-github-username>.github.io
+- Name: `<your-subdomain>`
+- Value: `<your-github-username>.github.io`
 - TTL: 1/2 Hour
 
 #### C. GitHub Pages Setup
