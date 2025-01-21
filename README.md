@@ -11,6 +11,7 @@ This guide provides instructions for deploying your Vite application to GitHub P
 - A Vite React project
 - Node.js and npm installed
 - A GitHub repository for your project
+- Create a branch for GitHub Pages to deploy to
 
 ## Base Setup (Required for Both Methods)
 
