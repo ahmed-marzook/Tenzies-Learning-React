@@ -1,31 +1,88 @@
-/* Controls */
+:root {
+  /* Control sizing */
+  --control-height: 2.75rem;
+  --control-min-width: 6.5rem;
+  --control-border-radius: 0.375rem;
+  --control-transition-duration: 0.2s;
+}
+
+/* Game Controls Container */
 .game-controls {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  justify-items: center;
-  align-items: center;
-  gap: var(--spacing-small);
-  margin-top: var(--spacing-large);
-  text-align: center;
-  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(var(--control-min-width), 1fr));
+  gap: var(--spacing-medium);
+  padding: var(--spacing-medium);
+  margin-block: var(--spacing-large);
+  max-width: 60rem;
+  margin-inline: auto;
+  touch-action: manipulation; /* Prevent zoom on mobile taps */
 }
 
+/* Base Button Styles */
 .game-button {
-  padding: 0;
-  border: none;
-  height: 36px;
-  width: 92px;
-  line-height: 35px;
-  border-radius: 4px;
-  background-color: var(--color-primary);
-  color: var(--color-white);
+  /* Reset */
+  all: unset;
+  box-sizing: border-box;
+  
+  /* Layout */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-inline-size: var(--control-min-width);
+  min-block-size: var(--control-height);
+  padding-inline: var(--spacing-medium);
+  
+  /* Typography */
   font-family: var(--font-primary);
   font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  color: var(--color-white);
+  
+  /* Visual Style */
+  background-color: var(--color-primary);
+  border-radius: var(--control-border-radius);
   box-shadow: var(--shadow-button);
   cursor: pointer;
-  transition: transform 0.1s ease;
+  user-select: none;
+  
+  /* Transition */
+  transition: 
+    transform var(--control-transition-duration) ease,
+    background-color var(--control-transition-duration) ease,
+    box-shadow var(--control-transition-duration) ease;
 }
 
-.game-button:active {
-  transform: scale(0.98);
+/* Interactive States */
+.game-button:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-button-hover);
+}
+
+.game-button:active:not(:disabled) {
+  transform: scale(0.98) translateY(0.125rem);
+}
+
+.game-button:focus-visible {
+  outline: 0.125rem solid var(--color-primary-light);
+  outline-offset: 0.25rem;
+}
+
+/* Disabled State */
+.game-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  filter: grayscale(0.2);
+}
+
+/* Mobile Optimization */
+@media (max-width: 48rem) {
+  .game-controls {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-small);
+  }
+  
+  .game-button {
+    width: 100%;
+  }
 }
