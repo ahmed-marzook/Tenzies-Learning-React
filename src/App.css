@@ -1,29 +1,105 @@
-* {
-  box-sizing: border-box;
+:root {
+  /* Quantum Design System Variables */
+  --quantum-ratio: 1.618;
+  --quantum-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --quantum-surface: radial-gradient(circle at 50% 0%, 
+    hsl(210 34% 15% / 0.8) 0%,
+    hsl(210 34% 12% / 0.8) 100%
+  );
+  
+  /* Chromatic Containment System */
+  --color-void: hsl(210 34% 15%);
+  --color-event: hsl(191 91% 72%);
+  --color-horizon: hsl(0 0% 75% / 0.5);
+  
+  /* Typographic Continuum */
+  --font-fluid: clamp(1rem, 0.34vw + 0.89rem, 1.19rem);
+  --font-primary: 'InterVariable', system-ui, sans-serif;
 }
 
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 70vh;
-  margin: 0;
-  padding: 0;
-  background-color: #0b2434;
+@layer reset {
+  /* Temporal Cascade Reset */
+  :where(*, ::before, ::after) {
+    box-sizing: border-box;
+    margin: 0;
+    background-repeat: no-repeat;
+    animation: none;
+  }
+  
+  :where(html) {
+    block-size: 100%;
+    color-scheme: dark light;
+    scroll-behavior: smooth;
+    font-size: 62.5%;
+  }
+  
+  :where(body) {
+    min-block-size: 100vh;
+    min-block-size: 100dvh;
+    font-family: var(--font-primary);
+    line-height: var(--quantum-ratio);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
-footer {
-  width: 320px;
-  font-family: var(--font-primary);
-  font-size: 12px;
-  color: silver;
-  margin: 1rem auto;
-  text-align: center;
-  word-wrap: break-word;
+@layer cosmic {
+  body {
+    display: grid;
+    place-content: center;
+    gap: 4cqmin;
+    padding: 4vmax;
+    background: 
+      var(--quantum-surface),
+      var(--color-void);
+    background-attachment: fixed;
+    font-size: var(--font-fluid);
+  }
+  
+  footer {
+    --container-padding: 2rem;
+    
+    container: footer / inline-size;
+    max-inline-size: min(80cqw, 64ch);
+    padding: var(--container-padding);
+    border-radius: calc(var(--container-padding) / 2);
+    background: hsl(0 0% 100% / 0.025);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 0 1px var(--color-horizon);
+    color: var(--color-horizon);
+    font-size: 0.8em;
+    text-wrap: pretty;
+    transition: all 0.4s var(--quantum-ease);
+    
+    &:hover {
+      --color-horizon: hsl(0 0% 85% / 0.8);
+      box-shadow: 0 0 0 1px var(--color-event);
+    }
+    
+    a {
+      --text-underline-offset: 0.2em;
+      
+      color: var(--color-event);
+      text-decoration: underline;
+      text-underline-offset: var(--text-underline-offset);
+      transition: 0.2s var(--quantum-ease);
+      
+      &:hover {
+        color: color-mix(in oklab, var(--color-event), white 20%);
+        text-underline-offset: 0.3em;
+      }
+      
+      &:focus-visible {
+        outline: 2px solid var(--color-event);
+        outline-offset: 0.2em;
+      }
+    }
+  }
 }
 
-footer a {
-  text-decoration: none;
-  font-style: italic;
-  color: #61dafb;
+@container footer (width < 480px) {
+  footer {
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
